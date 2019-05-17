@@ -1,0 +1,22 @@
+{
+  "name": "playing-with-json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "JSON-formatted-data-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erandro/playing-with-JSON.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erandro/playing-with-JSON/issues"
+  },
+  "homepage": "https://github.com/erandro/playing-with-JSON#readme",
+  "dependencies": {
+    "cors-anywhere": "^0.4.1"
+  }
+}
