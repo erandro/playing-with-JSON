@@ -3,7 +3,7 @@ function appendInfoOnHtml() {
     $("#content").append(`<div id="second"><p>There are ${uniqueStatuses} unique statuses in this JSON.</p></div>`);
     $("#content").append(`<div id="third"><p>The users who made the most operation are:</p>${printUseAndOpe(topUsers)}</div>`);
     $("#content").append(`<div id="fourth"><p>There average time a piece stay in status 8951 is ${status8951AvgTime.toFixed(2)} seconds.</p></div>`);
-    $("#content").append(`<div id="fifth"><p>There are  ${picesesWithMaxErrors[1]} pieces with ${picesesWithMaxErrors[0]} errors or more.</p></div>`);
+    $("#content").append(`<div id="fifth"><p>There is a ${picesesWithMaxErrors[1]}% of pieces in the data-set with ${picesesWithMaxErrors[0]} errors or more.</p></div>`);
 
     function printUseAndOpe(array) {
         let print = "";
