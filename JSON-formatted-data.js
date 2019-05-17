@@ -3,6 +3,7 @@ function appendInfoOnHtml() {
     $("#content").append(`<div id="second"><p>There are ${uniqueStatuses} unique statuses in this JSON.</p></div>`);
     $("#content").append(`<div id="third"><p>The users who made the most operation are:</p>${printUseAndOpe(topUsers)}</div>`);
     $("#content").append(`<div id="fourth"><p>There average time a piece stay in status 8951 is ${status8951AvgTime.toFixed(2)} seconds.</p></div>`);
+    $("#content").append(`<div id="fifth"><p>There are  ${picesesWithMaxErrors[1]} pieces with ${picesesWithMaxErrors[0]} errors or more.</p></div>`);
 
     function printUseAndOpe(array) {
         let print = "";
@@ -18,6 +19,7 @@ function appendInfoOnHtml() {
 let uniqueStatuses;
 let topUsers;
 let status8951AvgTime;
+let picesesWithMaxErrors;
 
 $.ajax({
     url: "http://localhost:8080/it-recruitment.mintel.com/testing/test_data.json",
@@ -26,6 +28,7 @@ $.ajax({
     uniqueStatuses = getUniqueStatus(data);
     topUsers = printTopUsers(data);
     status8951AvgTime = status8951Time(data);
+    picesesWithMaxErrors = errorCheck(data);
     appendInfoOnHtml();
 });
 
@@ -88,4 +91,50 @@ function status8951Time(data) {
     let timeAvg = timeSum / count;
 
     return timeAvg;
+}
+
+function errorCheck(data) {
+
+    let piecesObj = {};
+    let errorObj = {};
+    let errorPieceArr = [];
+    let pieceCount = 0;
+    let maxError = 2;
+
+    for (let i = 0; i < data.length; i++) {
+
+        // counting all pieces
+        if (!piecesObj[data[i].piece_id]) {
+            piecesObj[data[i].piece_id] = "ok";
+            pieceCount++;
+        }
+
+        // has error?
+        if (data[i].status % 10 === 3) {
+            // is in object?
+            if (errorObj[data[i].piece_id]) {
+                // doesn't have the status?
+                if (!errorObj[data[i].piece_id][data[i].status]) {
+                    errorObj[data[i].piece_id][data[i].status] = true;
+                    errorObj[data[i].piece_id].errCount++;
+                    if (errorObj[data[i].piece_id].errCount = maxError2) {
+                        piecesObj[data[i].piece_id] =
+                            "more than " + maxError + " errors";
+                        errorPieceArr.push(data[i].piece_id)
+                    }
+                }
+            } else {
+                piecesObj[data[i].piece_id] = "error";
+                errorObj[data[i].piece_id] = {}
+                errorObj[data[i].piece_id][data[i].status] = true;
+                errorObj[data[i].piece_id].errCount = 1;
+            }
+        }
+    }
+
+    let errPct = errorPieceArr.length > 0 ?
+        [maxError, pieceCount / errorPieceArr.length * 100] :
+        [maxError, 0];
+
+    return errPct;
 }
