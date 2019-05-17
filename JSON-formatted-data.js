@@ -1,7 +1,8 @@
 function appendInfoOnHtml() {
     $("#content").append(`<div id="first"><p>The data is from this <a href="http://it-recruitment.mintel.com/testing/test_data.json" target="_blank">JSON</a>.</p></div>`);
     $("#content").append(`<div id="second"><p>There are ${uniqueStatuses} unique statuses in this JSON.</p></div>`);
-    $("#content").append(`<div id="second"><p>The users who made the most operation are:</p>${printUseAndOpe(topUsers)}</div>`);
+    $("#content").append(`<div id="third"><p>The users who made the most operation are:</p>${printUseAndOpe(topUsers)}</div>`);
+    $("#content").append(`<div id="fourth"><p>There average time a piece stay in status 8951 is ${status8951AvgTime.toFixed(2)} seconds.</p></div>`);
 
     function printUseAndOpe(array) {
         let print = "";
@@ -16,6 +17,7 @@ function appendInfoOnHtml() {
 
 let uniqueStatuses;
 let topUsers;
+let status8951AvgTime;
 
 $.ajax({
     url: "http://localhost:8080/it-recruitment.mintel.com/testing/test_data.json",
@@ -23,6 +25,7 @@ $.ajax({
 }).then(function (data) {
     uniqueStatuses = getUniqueStatus(data);
     topUsers = printTopUsers(data);
+    status8951AvgTime = status8951Time(data);
     appendInfoOnHtml();
 });
 
@@ -69,6 +72,20 @@ function printTopUsers(data) {
         }
         return topUsersArr
     }
-    console.log(topUsers(usersArr, 5));
     return topUsers(usersArr, 5);
+}
+
+function status8951Time(data) {
+    let count = 0;
+    let timeSum = 0;
+
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].status === 8951 && typeof data[i].start_time === "number" && typeof data[i].end_time === "number") {
+            count++;
+            timeSum += data[i].end_time - data[i].start_time;
+        }
+    }
+    let timeAvg = timeSum / count;
+
+    return timeAvg;
 }
